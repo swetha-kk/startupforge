@@ -19,3 +19,7 @@ Some features in this project were originally designed to work with a local back
 Since this version is deployed using GitHub Pages (static hosting), certain functionalities may not work as expected online, including:
 
 - Idea validation (API-based)
+- AI Pitch Deck Generator
+
+## 🌐 Live Demo
+
