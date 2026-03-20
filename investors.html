@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Investor Discovery & CRM</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; background:#f8fbff; }
+    nav { background:#1e3a8a; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:14px 28px; }
+    nav h1 { margin:0; font-size:20px; }
+    nav ul { list-style:none; display:flex; gap:18px; margin:0; padding:0; }
+    nav a { color:#fff; text-decoration:none; font-size:14px; }
+    nav a:hover { text-decoration:underline; }
+    nav .profile { background:#2563eb; padding:6px 10px; border-radius:50%; font-weight:bold; }
+
+    .banner { background:linear-gradient(90deg,#1e3a8a,#2563eb); color:#fff; padding:28px; text-align:center; }
+    .banner h2 { margin:0; font-size:24px; }
+    .banner p { margin:6px 0 0; font-size:14px; }
+
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; padding:28px; }
+    .card { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.08); padding:18px; display:flex; gap:14px; }
+    .avatar { min-width:46px; height:46px; border-radius:50%; display:grid; place-items:center; font-weight:800; color:#fff; }
+    .a1{background:#2563eb}.a2{background:#1e3a8a}.a3{background:#3b82f6}.a4{background:#0ea5e9}.a5{background:#64748b}
+    .name { margin:0; color:#1e3a8a; }
+    .meta { font-size:13px; color:#475569; margin:2px 0 10px; }
+    .tags { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
+    .tag { font-size:12px; background:#eef2ff; color:#1e3a8a; padding:4px 8px; border-radius:999px; }
+    .actions { display:flex; gap:8px; margin-top:auto; }
+    .btn { background:#2563eb; color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:14px; }
+    .btn.ghost { background:#eef2ff; color:#1e3a8a; }
+
+    /* Toast */
+    #toast {
+      visibility: hidden;
+      min-width: 260px;
+      background-color: #1e3a8a;
+      color: #fff;
+      text-align: left;
+      border-radius: 8px;
+      padding: 12px 16px;
+      position: fixed;
+      z-index: 1000;
+      right: 30px;
+      bottom: 30px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.35s, bottom 0.35s;
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+    }
+    #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>StartupForge</h1>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="idea.html">Idea Validation</a></li>
+      <li><a href="pitchdeck.html">Pitch Deck</a></li>
+      <li><a href="matchmaker.html">Matchmaker</a></li>
+      <li><a href="investors.html">Investors</a></li>
+      <li><a href="captable.html">Cap Table</a></li>
+      <li><a href="experts.html">Experts</a></li>
+    </ul>
+    <div class="profile">AC</div>
+  </nav>
+
+  <section class="banner">
+    <h2>💼 Investor Discovery & CRM</h2>
+    <p>Browse investors. Shortlisting will add them to your Cap Table (Shortlisted) and take you there.</p>
+  </section>
+
+  <main class="grid" id="grid"></main>
+  <div id="toast"></div>
+
+  <script>
+    // Dummy investors
+    const investors = [
+      { name: "Amit Kapoor", firm: "KitePeak Angels", focus: ["EdTech","SaaS"], stage: "Pre-Seed, Seed", check: "$25k–$100k", geo: "India", color:"a1" },
+      { name: "Nova Capital Ventures", firm: "Nova Capital", focus: ["AI / ML","SaaS"], stage: "Seed, Series A", check: "$500k–$2M", geo: "Global", color:"a2" },
+      { name: "Maya Rodriguez", firm: "ImpactRise", focus: ["Future of Work","Consumer"], stage: "Pre-Seed, Seed", check: "$50k–$250k", geo: "US, LatAm", color:"a3" },
+      { name: "BlueForest Partners", firm: "BlueForest", focus: ["Climate","SaaS"], stage: "Seed, Series A", check: "$300k–$1.5M", geo: "EU, India", color:"a4" },
+      { name: "Arjun Iyer", firm: "DeltaEdge", focus: ["FinTech","AI / ML"], stage: "Pre-Seed, Seed", check: "$100k–$400k", geo: "India, SEA", color:"a5" },
+      { name: "Lighthouse Labs Fund", firm: "Lighthouse Labs", focus: ["HealthTech","AI / ML"], stage: "Seed", check: "$250k–$750k", geo: "US, EU", color:"a1" }
+    ];
+
+    const grid = document.getElementById("grid");
+
+    function initials(label){
+      const words = label.split(/\s+/).filter(Boolean);
+      return (words[0]?.[0] || "") + (words[1]?.[0] || "");
+    }
+    function cardTemplate(inv){
+      const tagHtml = inv.focus.map(f => `<span class="tag">${f}</span>`).join("");
+      return `
+        <div class="card">
+          <div class="avatar ${inv.color}">${initials(inv.name)}</div>
+          <div style="flex:1;">
+            <h4 class="name">${inv.name}</h4>
+            <div class="meta">${inv.firm} • ${inv.geo} • <b>${inv.stage}</b> • Checks: ${inv.check}</div>
+            <div class="tags">${tagHtml}</div>
+            <div class="actions">
+              <button class="btn" onclick="connect('${inv.name}')">Connect</button>
+              <button class="btn ghost" onclick="shortlist('${inv.name}')">Shortlist</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    function render(){ grid.innerHTML = investors.map(cardTemplate).join(""); }
+    render();
+
+    // toast
+    function toast(msg){
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(()=> t.classList.remove("show"), 1400);
+    }
+
+    function connect(name){
+      toast(`Connection request sent to ${name}`);
+    }
+
+    // Save shortlist → localStorage → navigate to Cap Table
+    function shortlist(name){
+      try {
+        const key = "cap_shortlisted";
+        const prev = JSON.parse(localStorage.getItem(key) || "[]");
+        // de-dupe
+        if(!prev.find(x => x.name === name)){
+          prev.unshift({ name, ts: Date.now() });
+          localStorage.setItem(key, JSON.stringify(prev));
+        }
+      } catch(e){}
+      toast(`${name} shortlisted`);
+      setTimeout(()=> { window.location.href = "captable.html#shortlisted"; }, 700);
+    }
+  </script>
+</body>
+</html>

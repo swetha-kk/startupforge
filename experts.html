@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Expert Marketplace</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; background:#f8fbff; }
+    nav { background:#1e3a8a; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:14px 28px; }
+    nav h1 { margin:0; font-size:20px; }
+    nav ul { list-style:none; display:flex; gap:18px; margin:0; padding:0; }
+    nav a { color:#fff; text-decoration:none; font-size:14px; }
+    nav a:hover { text-decoration:underline; }
+    nav .profile { background:#2563eb; padding:6px 10px; border-radius:50%; font-weight:bold; }
+
+    .banner { background:linear-gradient(90deg,#1e3a8a,#2563eb); color:#fff; padding:28px; text-align:center; }
+    .banner h2 { margin:0; font-size:24px; }
+    .banner p { margin:6px 0 0; font-size:14px; }
+
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; padding:28px; }
+    .card { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.08); padding:18px; display:flex; gap:14px; }
+    .avatar { min-width:46px; height:46px; border-radius:50%; display:grid; place-items:center; font-weight:800; color:#fff; }
+    .a1{background:#2563eb}.a2{background:#1e3a8a}.a3{background:#3b82f6}.a4{background:#0ea5e9}.a5{background:#64748b}
+    .name { margin:0; color:#1e3a8a; }
+    .meta { font-size:13px; color:#475569; margin:2px 0 10px; }
+    .tags { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
+    .tag { font-size:12px; background:#eef2ff; color:#1e3a8a; padding:4px 8px; border-radius:999px; }
+    .actions { display:flex; gap:8px; margin-top:auto; }
+    .btn { background:#2563eb; color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:14px; }
+    .btn.ghost { background:#eef2ff; color:#1e3a8a; }
+
+    /* Toast */
+    #toast {
+      visibility: hidden;
+      min-width: 260px;
+      background-color: #1e3a8a;
+      color: #fff;
+      text-align: left;
+      border-radius: 8px;
+      padding: 12px 16px;
+      position: fixed;
+      z-index: 1000;
+      right: 30px;
+      bottom: 30px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.35s, bottom 0.35s;
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+    }
+    #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>StartupForge</h1>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="idea.html">Idea Validation</a></li>
+      <li><a href="pitchdeck.html">Pitch Deck</a></li>
+      <li><a href="matchmaker.html">Matchmaker</a></li>
+      <li><a href="investors.html">Investors</a></li>
+      <li><a href="captable.html">Cap Table</a></li>
+      <li><a href="experts.html">Experts</a></li>
+    </ul>
+    <div class="profile">AC</div>
+  </nav>
+
+  <section class="banner">
+    <h2>🧑‍🏫 Expert Marketplace</h2>
+    <p>Connect with mentors, advisors, and domain experts. Book a session to get started.</p>
+  </section>
+
+  <main class="grid" id="grid"></main>
+  <div id="toast"></div>
+
+  <script>
+    // Dummy experts dataset
+    const experts = [
+      { name:"Dr. Sarah Lee", role:"AI/ML Advisor", tags:["Machine Learning","Deep Learning","AI Strategy"], rate:"$150/hr", color:"a1" },
+      { name:"Raj Patel", role:"Startup Finance Mentor", tags:["Fundraising","Financial Modeling","Valuations"], rate:"$120/hr", color:"a2" },
+      { name:"Emily Chen", role:"Product Design Coach", tags:["UX/UI","Prototyping","Design Thinking"], rate:"$100/hr", color:"a3" },
+      { name:"Michael Brown", role:"Legal & Compliance", tags:["Startup Law","IP","Contracts"], rate:"$200/hr", color:"a4" },
+      { name:"Anita Gupta", role:"Marketing Growth Expert", tags:["Digital Marketing","Branding","User Acquisition"], rate:"$130/hr", color:"a5" }
+    ];
+
+    const grid = document.getElementById("grid");
+    function initials(label){
+      const words = label.split(/\s+/).filter(Boolean);
+      return (words[0]?.[0] || "") + (words[1]?.[0] || "");
+    }
+    function cardTemplate(ex, idx){
+      const tagHtml = ex.tags.map(t => `<span class="tag">${t}</span>`).join("");
+      return `
+        <div class="card">
+          <div class="avatar ${ex.color}">${initials(ex.name)}</div>
+          <div style="flex:1;">
+            <h4 class="name">${ex.name}</h4>
+            <div class="meta">${ex.role} • Rate: ${ex.rate}</div>
+            <div class="tags">${tagHtml}</div>
+            <div class="actions">
+              <button class="btn" onclick="book('${ex.name}')">Book Session</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    function render(list){ grid.innerHTML = list.map(cardTemplate).join(""); }
+    render(experts);
+
+    // Toast
+    function toast(msg){
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(()=> t.classList.remove("show"), 2200);
+    }
+
+    // Actions
+    function book(name){
+      toast(`Session booked with ${name}`);
+    }
+  </script>
+</body>
+</html>

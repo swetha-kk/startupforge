@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Co-founder Matchmaker</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; background:#f8fbff; }
+    nav { background:#1e3a8a; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:14px 28px; }
+    nav h1 { margin:0; font-size:20px; }
+    nav ul { list-style:none; display:flex; gap:18px; margin:0; padding:0; }
+    nav a { color:#fff; text-decoration:none; font-size:14px; }
+    nav a:hover { text-decoration:underline; }
+    nav .profile { background:#2563eb; padding:6px 10px; border-radius:50%; font-weight:bold; }
+
+    .banner { background:linear-gradient(90deg,#1e3a8a,#2563eb); color:#fff; padding:28px; text-align:center; }
+    .banner h2 { margin:0; font-size:24px; }
+
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:20px; padding:28px; }
+    .card { background:#fff; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,.08); padding:20px; display:flex; flex-direction:column; align-items:center; text-align:center; }
+    .card img { width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:12px; }
+    .card h3 { margin:6px 0; color:#1e3a8a; }
+    .card p { font-size:14px; margin:4px 0; }
+    .btn { background:#2563eb; color:#fff; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; margin-top:10px; font-size:14px; }
+    .btn:hover { background:#1e3a8a; }
+
+    /* Toast styles */
+    #toast {
+      visibility: hidden;
+      min-width: 260px;
+      background-color: #1e3a8a;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 12px 16px;
+      position: fixed;
+      z-index: 1000;
+      right: 30px;
+      bottom: 30px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.4s, bottom 0.4s;
+    }
+    #toast.show {
+      visibility: visible;
+      opacity: 1;
+      bottom: 50px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>StartupForge</h1>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="idea.html">Idea Validation</a></li>
+      <li><a href="pitchdeck.html">Pitch Deck</a></li>
+      <li><a href="matchmaker.html">Matchmaker</a></li>
+      <li><a href="investors.html">Investors</a></li>
+      <li><a href="captable.html">Cap Table</a></li>
+      <li><a href="experts.html">Experts</a></li>
+    </ul>
+    <div class="profile">AC</div>
+  </nav>
+
+  <section class="banner">
+    <h2>🤝 Co-founder Matchmaker</h2>
+    <p>Find startup partners by skills, industry, and location.</p>
+  </section>
+
+  <main class="grid">
+    <div class="card">
+      <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="profile">
+      <h3>Ananya Sharma</h3>
+      <p><b>Role:</b> Tech Co-founder</p>
+      <p><b>Skills:</b> AI/ML, Python, Scalable Systems</p>
+      <button class="btn" onclick="saveContact('Ananya Sharma')">Save Contact</button>
+    </div>
+
+    <div class="card">
+      <img src="https://randomuser.me/api/portraits/men/34.jpg" alt="profile">
+      <h3>Rohit Mehta</h3>
+      <p><b>Role:</b> Marketing & Growth</p>
+      <p><b>Skills:</b> Brand Strategy, Social Media, GTM</p>
+      <button class="btn" onclick="saveContact('Rohit Mehta')">Save Contact</button>
+    </div>
+
+    <div class="card">
+      <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="profile">
+      <h3>Lisa Chen</h3>
+      <p><b>Role:</b> Product Designer</p>
+      <p><b>Skills:</b> UX, Figma, Design Thinking</p>
+      <button class="btn" onclick="saveContact('Lisa Chen')">Save Contact</button>
+    </div>
+
+    <div class="card">
+      <img src="https://randomuser.me/api/portraits/men/77.jpg" alt="profile">
+      <h3>Arjun Patel</h3>
+      <p><b>Role:</b> Operations Lead</p>
+      <p><b>Skills:</b> Supply Chain, Partnerships, Logistics</p>
+      <button class="btn" onclick="saveContact('Arjun Patel')">Save Contact</button>
+    </div>
+  </main>
+
+  <div id="toast"></div>
+
+  <script>
+    function saveContact(name) {
+      const toast = document.getElementById("toast");
+      toast.textContent = name + " has been saved to contacts!";
+      toast.className = "show";
+      setTimeout(() => {
+        toast.className = toast.className.replace("show", "");
+      }, 2500);
+    }
+  </script>
+</body>
+</html>

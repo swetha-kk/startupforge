@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cap Table</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .capgrid { padding: 28px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 24px; }
+    @media (max-width: 980px){ .capgrid{ grid-template-columns: 1fr; } }
+    .group { background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.08); padding: 20px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; }
+    th, td { border: 1px solid #e5e7eb; padding: 10px; text-align: left; }
+    th { background: #f8fbff; color: #1e3a8a; }
+    .rowform { display: grid; grid-template-columns: 1.2fr .6fr .8fr 1fr; gap: 10px; margin-top: 12px; }
+    @media (max-width: 680px){ .rowform{ grid-template-columns: 1fr; } }
+    .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    canvas { width: 100%; height: 320px; background: #fff; border-radius: 12px; }
+
+    /* shortlist panel */
+    .short-row { display:flex; justify-content:space-between; align-items:center; border:1px dashed #dbeafe; border-radius:10px; padding:10px 12px; margin-bottom:10px; }
+    .short-row b { color:#1e3a8a; }
+    .btn { background:linear-gradient(90deg,#2563eb,#1e3a8a); color:#fff; border:none; padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600; }
+    .btn.ghost { background:#eef2ff; color:#1e3a8a; }
+    .hint { font-size:12px; color:#6b7280; }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>StartupForge</h1>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="idea.html">Idea Validation</a></li>
+      <li><a href="pitchdeck.html">Pitch Deck</a></li>
+      <li><a href="matchmaker.html">Matchmaker</a></li>
+      <li><a href="investors.html">Investors</a></li>
+      <li><a href="captable.html">Cap Table</a></li>
+      <li><a href="experts.html">Experts</a></li>
+    </ul>
+    <div class="profile">AC</div>
+  </nav>
+
+  <section class="banner">
+    <h2>📊 Cap Table Management</h2>
+    <p>Manually add entries and manage shortlisted investors.</p>
+  </section>
+
+  <main class="capgrid">
+    <!-- Left: Table + Form + Chart -->
+    <section class="group">
+      <h3>Ownership Table</h3>
+      <table id="capTable">
+        <thead>
+          <tr><th>Name</th><th>Equity %</th><th>Investment</th><th>Notes</th></tr>
+        </thead>
+        <tbody id="capBody">
+          <tr><td>Alex Chen</td><td>60</td><td>0</td><td>Founder</td></tr>
+          <tr><td>Jane Doe</td><td>20</td><td>20000</td><td>Angel</td></tr>
+          <tr><td>ESOP Pool</td><td>20</td><td>—</td><td>Employee Options</td></tr>
+        </tbody>
+      </table>
+
+      <div class="rowform" style="margin-top:10px;">
+        <input id="name" placeholder="Name" />
+        <input id="equity" placeholder="Equity %" type="number" min="0" max="100" />
+        <input id="invest" placeholder="Investment (₹)" type="number" min="0" />
+        <input id="notes" placeholder="Notes" />
+      </div>
+      <div style="margin-top:12px; display:flex; gap:12px;">
+        <button class="btn" id="addBtn">Add Entry</button>
+        <button class="btn ghost" id="recalcBtn">Recalc Chart</button>
+      </div>
+      <p class="hint" style="margin-top:10px;">Note: The pie chart reflects the Equity % values in the table.</p>
+
+      <h3 style="margin-top:24px;">Ownership Pie</h3>
+      <canvas id="pie"></canvas>
+      <div id="legend" class="legend"></div>
+    </section>
+
+    <!-- Right: Shortlisted Investors -->
+    <section class="group" id="shortlisted">
+      <h3>Shortlisted Investors</h3>
+      <div id="shortList"></div>
+      <p class="hint">These are investors you shortlisted from the Investors page. Promote them into the main table when ready.</p>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <script>
+    // ---------- Cap table & chart ----------
+    const tbody = document.getElementById('capBody');
+    const addBtn = document.getElementById('addBtn');
+    const recalcBtn = document.getElementById('recalcBtn');
+    const pie = document.getElementById('pie');
+    const legend = document.getElementById('legend');
+    const ctx = pie.getContext('2d');
+    const colors = ['#2563eb','#1e3a8a','#60a5fa','#93c5fd','#3b82f6','#1d4ed8','#0ea5e9','#38bdf8','#0ea5e9','#64748b'];
+
+    function showToast(msg){
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(()=> t.classList.remove('show'), 1600);
+    }
+
+    function readTable(){
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      return rows.map((r,i) => {
+        const tds = r.querySelectorAll('td');
+        return {
+          name: tds[0].textContent.trim() || ('Entry '+(i+1)),
+          equity: parseFloat(tds[1].textContent) || 0
+        }
+      }).filter(r => r.equity > 0);
+    }
+
+    function drawPie(){
+      const data = readTable();
+      const total = data.reduce((a,b)=> a + b.equity, 0) || 1;
+      const rect = pie.getBoundingClientRect();
+      pie.width = Math.floor(rect.width * window.devicePixelRatio);
+      pie.height = Math.floor(rect.height * window.devicePixelRatio);
+      const cx = pie.width / 2, cy = pie.height / 2;
+      const radius = Math.min(pie.width, pie.height) * 0.38;
+      ctx.clearRect(0,0,pie.width,pie.height);
+
+      let start = -Math.PI/2;
+      legend.innerHTML = '';
+      data.forEach((d, i) => {
+        const slice = (d.equity / total) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, start, start + slice);
+        ctx.closePath();
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.fill();
+        start += slice;
+
+        const item = document.createElement('div');
+        item.className = 'legend-item';
+        item.innerHTML = `<span class="dot" style="background:${colors[i % colors.length]}"></span>${d.name} — ${d.equity}%`;
+        legend.appendChild(item);
+      });
+    }
+
+    function addRow(nameVal, equityVal, investVal, notesVal){
+      const name = (nameVal ?? document.getElementById('name').value.trim()) || 'New Holder';
+      const equity = (equityVal ?? document.getElementById('equity').value.trim());
+      const invest = (investVal ?? document.getElementById('invest').value.trim()) || '0';
+      const notes = (notesVal ?? document.getElementById('notes').value.trim()) || '—';
+      if(equity === '' || isNaN(parseFloat(equity))){
+        showToast('Enter a valid Equity %'); return;
+      }
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${name}</td><td>${parseFloat(equity)}</td><td>${invest}</td><td>${notes}</td>`;
+      tbody.appendChild(tr);
+      if(nameVal === undefined) {
+        // clear only when manual add
+        document.getElementById('name').value = '';
+        document.getElementById('equity').value = '';
+        document.getElementById('invest').value = '';
+        document.getElementById('notes').value = '';
+      }
+      drawPie();
+      showToast('Entry added');
+    }
+
+    addBtn.addEventListener('click', () => addRow());
+    recalcBtn.addEventListener('click', drawPie);
+    window.addEventListener('resize', drawPie);
+
+    // ---------- Shortlisted panel ----------
+    const shortListEl = document.getElementById('shortList');
+    const SHORT_KEY = 'cap_shortlisted';
+
+    function loadShortlisted(){
+      const arr = JSON.parse(localStorage.getItem(SHORT_KEY) || '[]');
+      shortListEl.innerHTML = arr.length ? '' : '<p class="hint">No shortlisted investors yet.</p>';
+      arr.forEach((it, idx) => {
+        const row = document.createElement('div');
+        row.className = 'short-row';
+        row.innerHTML = `
+          <div><b>${it.name}</b><br><span class="hint">Shortlisted</span></div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn" onclick="promote('${it.name}', ${idx})">Promote to Cap Table</button>
+            <button class="btn ghost" onclick="removeShort(${idx})">Remove</button>
+          </div>
+        `;
+        shortListEl.appendChild(row);
+      });
+    }
+
+    function removeShort(index){
+      const arr = JSON.parse(localStorage.getItem(SHORT_KEY) || '[]');
+      arr.splice(index, 1);
+      localStorage.setItem(SHORT_KEY, JSON.stringify(arr));
+      loadShortlisted();
+      showToast('Removed from shortlist');
+    }
+
+    // Promote: adds a zero-equity placeholder to table so you can edit later
+    function promote(name, index){
+      addRow(name, 0, 0, 'Shortlisted investor');
+      // remove from shortlist
+      const arr = JSON.parse(localStorage.getItem(SHORT_KEY) || '[]');
+      arr.splice(index, 1);
+      localStorage.setItem(SHORT_KEY, JSON.stringify(arr));
+      loadShortlisted();
+      showToast(`${name} promoted to Cap Table`);
+    }
+
+    // Scroll to shortlisted section if anchored
+    function focusAnchor(){
+      if(location.hash === '#shortlisted'){
+        document.getElementById('shortlisted').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // init
+    loadShortlisted();
+    drawPie();
+    focusAnchor();
+  </script>
+
+  <style>
+    /* simple toast reused here */
+    .toast {
+      position: fixed; right: 24px; bottom: 24px;
+      background: #1e3a8a; color: #fff; padding: 12px 16px;
+      border-radius: 10px; box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      opacity: 0; transform: translateY(8px); transition: .25s ease;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+  </style>
+</body>
+</html>

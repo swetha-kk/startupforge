@@ -1,0 +1,37 @@
+:root {
+  --blue: #2563eb;
+  --dark-blue: #1e3a8a;
+  --sky: #3b82f6;
+  --bg: #f0f7ff;
+  --card: #ffffff;
+  --text: #1f2937;
+}
+* { box-sizing: border-box; margin:0; padding:0; }
+body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(to bottom, var(--bg), #fff); color: var(--text); }
+
+/* Navbar */
+nav { display:flex; justify-content:space-between; align-items:center; padding:16px 40px; background:linear-gradient(to right,var(--blue),var(--dark-blue)); color:#fff; }
+nav h1{font-size:22px;}
+nav ul{display:flex;list-style:none;gap:22px;}
+nav a{color:#fff;text-decoration:none;font-weight:500;opacity:.95;}
+nav a:hover{opacity:1;text-decoration:underline;}
+.profile{background:#fff;color:var(--blue);width:40px;height:40px;display:grid;place-items:center;border-radius:50%;font-weight:700;}
+
+/* Banner */
+.banner{margin:28px;padding:28px;border-radius:16px;background:linear-gradient(90deg,var(--sky),var(--dark-blue));color:#fff;}
+.banner h2{margin-bottom:6px;font-size:26px;}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;padding:0 32px 48px;}
+.card{background:#fff;padding:24px;border-radius:16px;box-shadow:0 2px 6px rgba(0,0,0,.1);transition:.2s;cursor:pointer;}
+.card:hover{transform:translateY(-4px);box-shadow:0 6px 16px rgba(0,0,0,.15);}
+.card h3{color:var(--dark-blue);margin-bottom:8px;}
+.card p{color:#555;font-size:14px;}
+
+/* Inputs */
+textarea,input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #e5e7eb;margin-top:6px;}
+textarea:focus,input:focus{border-color:var(--sky);outline:none;box-shadow:0 0 0 3px rgba(59,130,246,.15);}
+.btn{background:linear-gradient(90deg,var(--blue),var(--dark-blue));color:#fff;padding:12px 16px;border:none;border-radius:12px;font-weight:600;cursor:pointer;}
+.btn:hover{opacity:.9;}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--dark-blue);color:#fff;padding:12px 20px;border-radius:8px;opacity:0;transition:.3s;}
+.toast.show{opacity:1;}

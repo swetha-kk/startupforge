@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>StartupForge Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; background:#f8fbff; }
+    nav { background:#1e3a8a; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:14px 28px; }
+    nav h1 { margin:0; font-size:20px; }
+    nav ul { list-style:none; display:flex; gap:18px; margin:0; padding:0; }
+    nav a { color:#fff; text-decoration:none; font-size:14px; }
+    nav a:hover { opacity:0.8; }
+    nav .profile { background:#2563eb; padding:6px 10px; border-radius:50%; font-weight:bold; }
+
+    .banner { background:linear-gradient(90deg,#1e3a8a,#2563eb); color:#fff; padding:28px; text-align:center; }
+    .banner h2 { margin:0; font-size:26px; }
+    .banner p { margin:6px 0 0; font-size:15px; }
+
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:24px; padding:32px; }
+    .card {
+      display:block;
+      background:#fff;
+      border-radius:14px;
+      box-shadow:0 3px 10px rgba(0,0,0,.08);
+      padding:28px 20px;
+      text-align:center;
+      cursor:pointer;
+      text-decoration:none; /* remove underline */
+      transition:all .2s ease;
+    }
+    .card:hover {
+      transform:translateY(-6px);
+      box-shadow:0 8px 20px rgba(0,0,0,.12);
+    }
+    .card h3 { margin:0; font-size:20px; color:#1e3a8a; }
+    .card p { font-size:14px; color:#475569; margin:10px 0 0; }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>StartupForge</h1>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="idea.html">Idea Validation</a></li>
+      <li><a href="pitchdeck.html">Pitch Deck</a></li>
+      <li><a href="matchmaker.html">Matchmaker</a></li>
+      <li><a href="investors.html">Investors</a></li>
+      <li><a href="captable.html">Cap Table</a></li>
+      <li><a href="experts.html">Experts</a></li>
+    </ul>
+    <div class="profile">AC</div>
+  </nav>
+
+  <section class="banner">
+    <h2>Welcome, Founder!</h2>
+    <p>Ready to build your startup?</p>
+  </section>
+
+  <main class="grid">
+    <a class="card" href="idea.html">
+      <h3>Validate Idea</h3>
+      <p>Review and measure your idea’s potential.</p>
+    </a>
+    <a class="card" href="pitchdeck.html">
+      <h3>Build Pitch Deck</h3>
+      <p>Create an investor-ready pitch from your inputs.</p>
+    </a>
+    <a class="card" href="matchmaker.html">
+      <h3>Find Co-founder</h3>
+      <p>Discover partners who share your vision.</p>
+    </a>
+    <a class="card" href="investors.html">
+      <h3>Discover Investors</h3>
+      <p>Find angels, VCs, and accelerators for your startup.</p>
+    </a>
+    <a class="card" href="captable.html">
+      <h3>Manage Cap Table</h3>
+      <p>Track equity and ownership with ease.</p>
+    </a>
+    <a class="card" href="experts.html">
+      <h3>Connect with Experts</h3>
+      <p>Book mentors and advisors to guide your journey.</p>
+    </a>
+  </main>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Idea Validation</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --blue1: #2563eb;
+      --blue2: #1e3a8a;
+      --bg1: #f7fbff;
+      --bg2: #eef4ff;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+    }
+
+    nav {
+      background: linear-gradient(90deg, var(--blue2), var(--blue1));
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 28px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    nav h1 { margin: 0; font-size: 20px; font-weight: 700; }
+    nav ul { list-style: none; display: flex; gap: 22px; margin: 0; padding: 0; }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      opacity: 0.9;
+      transition: opacity 0.2s ease;
+    }
+    nav a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 3px; }
+    .profile {
+      background: rgba(255,255,255,0.2);
+      padding: 6px 12px;
+      border-radius: 50%;
+      font-weight: bold;
+    }
+
+    .stage {
+      min-height: calc(100vh - 80px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 24px;
+    }
+
+    .cta {
+      display: inline-block;
+      padding: 20px 42px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue1), var(--blue2));
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 16px 32px rgba(30,58,138,0.25),
+                  inset 0 1px 2px rgba(255,255,255,0.15);
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+    .cta:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 24px 48px rgba(30,58,138,0.35),
+                  inset 0 1px 2px rgba(255,255,255,0.2);
+      filter: brightness(1.05);
+    }
+    .cta:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: 0 12px 24px rgba(30,58,138,0.2);
+    }
+
+    /* Small polish */
+    h1, nav a { letter-spacing: 0.3px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>StartupForge</h1>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="http://172.16.44.98:8502/" target="_blank">Idea Validation</a></li>
+      <li><a href="pitchdeck.html">Pitch Deck</a></li>
+      <li><a href="matchmaker.html">Matchmaker</a></li>
+      <li><a href="investors.html">Investors</a></li>
+      <li><a href="captable.html">Cap Table</a></li>
+      <li><a href="experts.html">Experts</a></li>
+    </ul>
+    <div class="profile">AC</div>
+  </nav>
+
+  <div class="stage">
+    <a href="http://172.16.44.98:8501/" target="_blank" class="cta">
+      Get your ideas pitched in 20 seconds
+    </a>
+  </div>
+</body>
+</html>
