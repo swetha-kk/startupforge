@@ -22,4 +22,5 @@ Since this version is deployed using GitHub Pages (static hosting), certain func
 - AI Pitch Deck Generator
 
 ## 🌐 Live Demo
+https://drive.google.com/drive/folders/1o5vMXOqmsCf_BQ75VIivzNjkHX3E0ATG
 
