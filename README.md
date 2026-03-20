@@ -13,3 +13,9 @@ Cap Table Management – Track ownership and equity distribution with ease
 Expert Marketplace – Access mentors and tools to accelerate growth
 
 Built with a clean UI and intuitive navigation, StartupForge focuses on reducing complexity and enabling founders to focus on what truly matters, building and scaling their vision.
+
+## ⚠️ Note on Functionality
+Some features in this project were originally designed to work with a local backend (API).  
+Since this version is deployed using GitHub Pages (static hosting), certain functionalities may not work as expected online, including:
+
+- Idea validation (API-based)
